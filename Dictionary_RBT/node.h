@@ -19,15 +19,22 @@ class Node
 public:
     Node(K, V);
     friend class dictionary<K, V, KeyComp<K> >;
+    K getKey();
 };
 
 
 template <class K, class V>
-Node<K, V>::Node(K newKey=0, V newVal=0) {
+Node<K, V>::Node(K newKey, V newVal) {
     this->key = newKey;
     this->value = newVal;
     color = RED;
     left = right = parent = NULL;
+}
+
+template <class K, class V>
+K Node<K,V>::getKey()
+{
+    return key;
 }
 
 #endif // _NODE_H_

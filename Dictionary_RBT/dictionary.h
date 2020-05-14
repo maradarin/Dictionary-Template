@@ -3,7 +3,7 @@
 #include <iostream>
 #include "node.h"
 #include "keycomp.h"
-#include <stack>
+#include <queue>
 #include <exception>
 using namespace std;
 
@@ -28,6 +28,8 @@ class dictionary
         Node<K,V>* insertBST(Node<K,V> *&, Node<K,V> *&);
         Node<K,V>* deleteBST(Node<K,V> *&, K);
         int getBlackHeight(Node<K,V> *);
+        void printLevelOrder();
+        void levelOrder(Node<K,V>*);
 
     public:
         dictionary();
@@ -36,6 +38,8 @@ class dictionary
         void inorder();
         void preorder();
         Node<K,V>* getRoot() {return root;}
+        template <class Q, class W, class E>
+        friend ostream& operator<<(ostream&, dictionary<Q, W, E>&);
 };
 
 template <class K, class V, class F>
@@ -357,6 +361,46 @@ int dictionary<K,V,F>::getBlackHeight(Node<K,V> *node) {
         node = node->left;
     }
     return blackheight;
+}
+
+template <class K, class V, class F>
+void dictionary<K,V,F>::levelOrder(Node<K,V> *x) {
+    if (x == NULL)
+      return;
+
+    queue<Node<K,V> *> q;
+    Node<K,V> *curr;
+
+    q.push(x);
+
+    while (!q.empty()) {
+      curr = q.front();
+      q.pop();
+
+    cout << endl << "Cheie: " << curr->key << "-> Valoare: " << curr->value << " <" << curr->color << ">";
+
+      if (curr->left != NULL)
+        q.push(curr->left);
+      if (curr->right != NULL)
+        q.push(curr->right);
+    }
+  }
+
+template <class K, class V, class F>
+  void dictionary<K,V,F>::printLevelOrder() {
+    cout << "Level order: " << endl;
+    if (root == NULL)
+      cout << "Tree is empty" << endl;
+    else
+      levelOrder(root);
+    cout << endl;
+  }
+
+template <class K, class V, class F>
+ostream& operator<<(ostream& out, dictionary<K, V, F>& d)
+{
+    d.printLevelOrder();
+    return out;
 }
 
 #endif // _DICTIONARY_H_

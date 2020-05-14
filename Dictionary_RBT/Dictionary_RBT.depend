@@ -1,16 +1,16 @@
 # depslib dependency file v1.0
-1589415754 source:c:\users\mara\onedrive\desktop\dictionary_rbt\main.cpp
+1589417894 source:c:\users\mara\onedrive\desktop\dictionary_rbt\main.cpp
 	<iostream>
 	"dictionary.h"
 
-1589416275 c:\users\mara\onedrive\desktop\dictionary_rbt\dictionary.h
+1589417858 c:\users\mara\onedrive\desktop\dictionary_rbt\dictionary.h
 	<iostream>
 	"node.h"
 	"keycomp.h"
-	<stack>
+	<queue>
 	<exception>
 
-1589415285 c:\users\mara\onedrive\desktop\dictionary_rbt\node.h
+1589416975 c:\users\mara\onedrive\desktop\dictionary_rbt\node.h
 	<iostream>
 	<string>
 	"keycomp.h"
