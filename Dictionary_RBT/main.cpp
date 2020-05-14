@@ -17,6 +17,7 @@ int main() {
     rbTree1.preorder();
 cout<<endl;
 cout<<rbTree1;
+cout<<endl<<rbTree1[22]<<" "<<rbTree1[26]<<" "<<rbTree1[13]<<endl;
     cout<<endl<<endl;
     rbTree1.deleteValue(18);
     rbTree1.deleteValue(10);
@@ -27,6 +28,7 @@ cout<<rbTree1;
 rbTree1.preorder();
 cout<<endl;
 cout<<rbTree1;
+
 
     /*string data1;
     i=1;

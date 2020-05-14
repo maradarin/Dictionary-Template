@@ -35,6 +35,8 @@ class dictionary
         dictionary();
         void insertValue(K, V);
         void deleteValue(K);
+        Node<K,V>* treeSearch(const K);
+        V operator[](const K);
         void inorder();
         void preorder();
         Node<K,V>* getRoot() {return root;}
@@ -298,6 +300,32 @@ template <class K, class V, class F>
 void dictionary<K,V,F>::deleteValue(K newKey) {
     Node<K,V> *node = deleteBST(root, newKey);
     fixDeleteRBTree(node);
+}
+
+template <class K, class V, class F>
+Node<K, V>* dictionary<K, V, F>::treeSearch(const K newKey)
+{
+    Node<K, V>* temp = root;
+    if (temp == NULL)
+        return NULL;
+
+    while (temp) {
+        if (!cmp(temp->key, newKey) && !cmp(newKey, temp->key))
+            return temp;
+        else if (cmp(newKey, temp->key))
+            temp = temp->left;
+        else
+            temp = temp->right;
+    }
+    return NULL;
+}
+
+template <class K, class V, class F>
+V dictionary<K, V, F>::operator[](const K i) ///supraincarcarea operatorului []
+{
+    if(treeSearch(i)==NULL)
+        return NULL;
+    return treeSearch(i)->value;
 }
 
 template <class K, class V, class F>
