@@ -20,6 +20,7 @@ public:
     Node(K, V);
     friend class dictionary<K, V, KeyComp<K> >;
     K getKey();
+    //~Node();
 };
 
 
@@ -37,5 +38,12 @@ K Node<K,V>::getKey()
     return key;
 }
 
+/*template <class K, class V>
+Node<K,V>::~Node()
+{
+    delete left;
+    delete right;
+    delete parent;
+}*/
 #endif // _NODE_H_
 

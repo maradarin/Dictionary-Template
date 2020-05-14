@@ -30,23 +30,51 @@ class dictionary
         int getBlackHeight(Node<K,V> *);
         void printLevelOrder();
         void levelOrder(Node<K,V>*);
+        void copy(Node<K,V>*);
 
     public:
         dictionary();
+        dictionary(const dictionary&);
         void insertValue(K, V);
         void deleteValue(K);
+        void deleteAll();
         Node<K,V>* treeSearch(const K);
+        dictionary<K, V, F>& operator=(dictionary<K, V, F>&);
         V operator[](const K);
         void inorder();
         void preorder();
         Node<K,V>* getRoot() {return root;}
         template <class Q, class W, class E>
         friend ostream& operator<<(ostream&, dictionary<Q, W, E>&);
+        ~dictionary();
 };
 
 template <class K, class V, class F>
 dictionary<K,V,F>::dictionary() {
     root = NULL;
+}
+
+template <class K, class V, class F>
+dictionary<K,V,F>::dictionary(const dictionary& d)
+{
+    root=d.root;
+}
+
+template <class K, class V, class F>
+dictionary<K,V,F>& dictionary<K,V,F>::operator=(dictionary<K,V,F>& d)
+{
+    root=d.root;
+}
+
+template <class K, class V, class F>
+void dictionary<K,V,F>::copy(Node<K,V> * N)
+{
+     if(N)
+     {
+         insertValue(N->key,N->value);
+         copy(N->left);
+         copy(N->right);
+     }
 }
 
 template <class K, class V, class F>
@@ -303,6 +331,13 @@ void dictionary<K,V,F>::deleteValue(K newKey) {
 }
 
 template <class K, class V, class F>
+void dictionary<K,V,F>::deleteAll()
+{
+    while(root!=NULL)
+        deleteValue(root->key);
+}
+
+template <class K, class V, class F>
 Node<K, V>* dictionary<K, V, F>::treeSearch(const K newKey)
 {
     Node<K, V>* temp = root;
@@ -429,6 +464,13 @@ ostream& operator<<(ostream& out, dictionary<K, V, F>& d)
 {
     d.printLevelOrder();
     return out;
+}
+
+template <class K, class V, class F>
+dictionary<K,V,F>::~dictionary()
+{
+    delete root;
+    cout<<"destroyed"<<endl;
 }
 
 #endif // _DICTIONARY_H_
