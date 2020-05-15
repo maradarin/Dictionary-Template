@@ -5,12 +5,16 @@
 #include "keycomp.h"
 using namespace std;
 
-template <typename K, typename V, typename KeyComp> class dictionary;
-enum Color {RED, BLACK, DOUBLE_BLACK};
+template <typename K, typename V, typename KeyComp>
+class dictionary;
+enum Color { RED,
+    BLACK,
+    DOUBLE_BLACK };
+//DOUBLE_BLACK: folosit pt stergere
+//cand e sters un nod negru si inlocuit de un copil negru, acesta e considerat DOUBLE_BLACK
 
 template <class K, class V>
-class Node
-{
+class Node {
     K key;
     V value;
     int color;
@@ -18,32 +22,51 @@ class Node
 
 public:
     Node(K, V);
-    friend class dictionary<K, V, KeyComp<K> >;
+    Node(const Node<K, V>&);
     K getKey();
-    //~Node();
+    Node<K, V>* getLeft();
+    Node<K, V>* getRight();
+    friend class dictionary<K, V, KeyComp<K> >;
 };
 
-
 template <class K, class V>
-Node<K, V>::Node(K newKey, V newVal) {
-    this->key = newKey;
-    this->value = newVal;
-    color = RED;
-    left = right = parent = NULL;
+Node<K, V>::Node(K newKey, V newVal)
+    : key(newKey)
+    , value(newVal)
+    , color(RED)
+    , left(NULL)
+    , right(NULL)
+    , parent(NULL)
+{
 }
 
 template <class K, class V>
-K Node<K,V>::getKey()
+Node<K, V>::Node(const Node<K, V>& n)
+    : key(n.key)
+    , value(n.value)
+    , color(n.color)
+    , left(n.left)
+    , right(n.right)
+    , parent(n.parent)
+{
+}
+
+template <class K, class V>
+Node<K, V>* Node<K, V>::getLeft()
+{
+    return left;
+}
+
+template <class K, class V>
+Node<K, V>* Node<K, V>::getRight()
+{
+    return right;
+}
+
+template <class K, class V>
+K Node<K, V>::getKey()
 {
     return key;
 }
 
-/*template <class K, class V>
-Node<K,V>::~Node()
-{
-    delete left;
-    delete right;
-    delete parent;
-}*/
 #endif // _NODE_H_
-

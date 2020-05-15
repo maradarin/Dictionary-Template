@@ -32,7 +32,10 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="dictionary.h" />
+		<Unit filename="keycomp.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="node.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
