@@ -25,6 +25,9 @@ private:
     Node<K, V>* insertBST(Node<K, V>*&, Node<K, V>*&);
     Node<K, V>* deleteBST(Node<K, V>*&, K);
 
+    void helpCopy(Node<K, V>*&, Node<K, V>*);
+    void helpDestruct(Node<K, V>*&);
+
 public:
     dictionary();
     dictionary(const dictionary<K, V, F>&);
@@ -63,97 +66,97 @@ void dictionary<K, V, F>::setColor(Node<K, V>*& node, int color)
 }
 
 template <class K, class V, class F>
-void dictionary<K, V, F>::rotateLeft(Node<K, V>*& x)    // x e nodul curent
+void dictionary<K, V, F>::rotateLeft(Node<K, V>*& x)
 {
-    Node<K, V>* y = x->right;                           //y e fiul drept al lui x
-    x->right = y->left;                                 //atasam lui x in partea dreapta subarborele stang al lui y
+    Node<K, V>* y = x->right;                       //y e fiul drept al lui x
+    x->right = y->left;                             //atasam lui x in partea dreapta subarborele stang al lui y
 
-    if (x->right != NULL)                               //daca y avea subarbore stang
-        x->right->parent = x;                           //atunci x devine parintele acelui subarbore
+    if (x->right != NULL)                           //daca y avea subarbore stang
+        x->right->parent = x;                       //atunci x devine parintele acelui subarbore
 
-    y->parent = x->parent;                              //x si y vor avea acelasi parinte
+    y->parent = x->parent;                          //x si y vor avea acelasi parinte
 
-    if (x->parent == NULL)                              //daca x e radacina
-        root = y;                                       //y va deveni radacina
-    else if (x == x->parent->left)                      //daca x e fiul stang al parintelui sau
-        x->parent->left = y;                            //y o sa-i ia locul lui x
+    if (x->parent == NULL)                          //daca x e radacina
+        root = y;                                   //y va deveni radacina
+    else if (x == x->parent->left)                  //daca x e fiul stang al parintelui sau
+        x->parent->left = y;                        //y o sa-i ia locul lui x
     else
         x->parent->right = y;
 
-    y->left = x;                                        //x devine fiul stang al lui y
-    x->parent = y;                                      //deci y o sa-i devina parinte lui x
+    y->left = x;                                    //x devine fiul stang al lui y
+    x->parent = y;                                  //deci y o sa-i devina parinte lui x
 }
 
 template <class K, class V, class F>
-void dictionary<K, V, F>::rotateRight(Node<K, V>*& y)   //y e nodul curent
+void dictionary<K, V, F>::rotateRight(Node<K, V>*& y)
 {
-    Node<K, V>* x = y->left;                            //x e fiul stang al lui y
-    y->left = x->right;                                 //atasam lui y in partea stanga subarborele drept al lui x
+    Node<K, V>* x = y->left;                        //x e fiul stang al lui y
+    y->left = x->right;                             //atasam lui y in partea stanga subarborele drept al lui x
 
-    if (y->left != NULL)                                //daca x avea subarbore drept
-        y->left->parent = y;                            //atunci y devine parintele acelui subarbore
+    if (y->left != NULL)                            //daca x avea subarbore drept
+        y->left->parent = y;                        //atunci y devine parintele acelui subarbore
 
-    x->parent = y->parent;                              //x si y vor avea acelasi parinte
+    x->parent = y->parent;                          //x si y vor avea acelasi parinte
 
-    if (y->parent == NULL)                              //daca y e radacina
-        root = x;                                       //x va deveni radacina
-    else if (y == y->parent->left)                      //daca y e fiul stang al parintelui sau
-        y->parent->left = x;                            //x o sa-i ia locul lui y
+    if (y->parent == NULL)                          //daca y e radacina
+        root = x;                                   //x va deveni radacina
+    else if (y == y->parent->left)                  //daca y e fiul stang al parintelui sau
+        y->parent->left = x;                        //x o sa-i ia locul lui y
     else
         y->parent->right = x;
 
-    x->right = y;                                       //y devine fiul drept al lui x
-    y->parent = x;                                      //deci x o sa-i devina parinte lui y
+    x->right = y;                                   //y devine fiul drept al lui x
+    y->parent = x;                                  //deci x o sa-i devina parinte lui y
 }
 
 template <class K, class V, class F>
 void dictionary<K, V, F>::fixInsertRBTree(Node<K, V>*& ptr)
 {
-    Node<K, V>* parent = NULL;                          //parinte
-    Node<K, V>* grandparent = NULL;                     //"bunic" = parintele parintelui
+    Node<K, V>* parent = NULL;
+    Node<K, V>* grandparent = NULL;                 //"bunic" = parintele parintelui
     while (ptr != root && getColor(ptr) == RED && getColor(ptr->parent) == RED) {
         parent = ptr->parent;
         grandparent = parent->parent;
-        if (parent == grandparent->left) {              //daca parintele e fiul stang al "bunicului"
-            Node<K, V>* uncle = grandparent->right;     //"unchiul" = "fratele" parintelui, fiul drept al "bunicului"
-            if (getColor(uncle) == RED) {               //daca "unchiul" e ROSU
+        if (parent == grandparent->left) {          //daca parintele e fiul stang al "bunicului"
+            Node<K, V>* uncle = grandparent->right; //"unchiul" = "fratele" parintelui, fiul drept al "bunicului"
+            if (getColor(uncle) == RED) {           //daca "unchiul" e ROSU
                 setColor(uncle, BLACK);
-                setColor(parent, BLACK);                //ambii frati sunt colorati cu NEGRU
-                setColor(grandparent, RED);             //parintele lor, "bunicul" nodului curent, devine ROSU
-                ptr = grandparent;                      //nodul curent devine "bunicul"
+                setColor(parent, BLACK);            //ambii frati sunt colorati cu NEGRU
+                setColor(grandparent, RED);         //parintele lor, "bunicul" nodului curent, devine ROSU
+                ptr = grandparent;                  //nodul curent devine "bunicul"
             }
-            else {                                      //altfel, "unchiul" e NEGRU
-                if (ptr == parent->right) {             //daca nodul curent e fiul drept
-                    rotateLeft(parent);                 //rotatie la stanga
-                    ptr = parent;                       //nodul curent devine parintele
-                    parent = ptr->parent;               //parintele devine "bunicul"
+            else {                                  //altfel, "unchiul" e NEGRU
+                if (ptr == parent->right) {         //daca nodul curent e fiul drept
+                    rotateLeft(parent);             //rotatie la stanga
+                    ptr = parent;                   //nodul curent devine parintele
+                    parent = ptr->parent;           //parintele devine "bunicul"
                 }
-                rotateRight(grandparent);               //rotatie la dreapta
-                swap(parent->color, grandparent->color);//parintele va fi NEGRU si bunicul ROSU
+                rotateRight(grandparent);
+                swap(parent->color, grandparent->color); //parintele va fi NEGRU si bunicul ROSU
                 ptr = parent;
             }
         }
         else {
             Node<K, V>* uncle = grandparent->left;
-            if (getColor(uncle) == RED) {               //altfel, "unchiul" e fiul stang al "bunicului" si e ROSU
+            if (getColor(uncle) == RED) {           //altfel, "unchiul" e fiul stang al "bunicului" si e ROSU
                 setColor(uncle, BLACK);
-                setColor(parent, BLACK);                //ambii frati devin NEGRI
-                setColor(grandparent, RED);             //"bunicul" devine ROSU
-                ptr = grandparent;                      //nodul curent devine "bunicul"
+                setColor(parent, BLACK);            //ambii frati devin NEGRI
+                setColor(grandparent, RED);         //"bunicul" devine ROSU
+                ptr = grandparent;                  //nodul curent devine "bunicul"
             }
-            else {                                      //altfel, "unchiul" e NEGRU
-                if (ptr == parent->left) {              //daca nodul curent e fiul stang
+            else {                                  //altfel, "unchiul" e NEGRU
+                if (ptr == parent->left) {          //daca nodul curent e fiul stang
                     rotateRight(parent);
                     ptr = parent;
-                    parent = ptr->parent;               //parintele devine nodul curent
+                    parent = ptr->parent;           //parintele devine nodul curent
                 }
                 rotateLeft(grandparent);
-                swap(parent->color, grandparent->color);//parintele va fi NEGRU si bunicul ROSU
+                swap(parent->color, grandparent->color); //parintele va fi NEGRU si bunicul ROSU
                 ptr = parent;
             }
         }
     }
-    setColor(root, BLACK);                              //radacina e mereu NEAGRA
+    setColor(root, BLACK);                               //radacina e mereu NEAGRA
 }
 
 template <class K, class V, class F>
@@ -197,7 +200,7 @@ void dictionary<K, V, F>::fixDeleteRBTree(Node<K, V>*& node)
                 if (getColor(sibling) == RED) {         //daca fratele e ROSU
                     setColor(sibling, BLACK);           //fratele devine NEGRU
                     setColor(parent, RED);              //parintele devine ROSU
-                    rotateLeft(parent);                 //rotatie la stanga
+                    rotateLeft(parent);
                 }
                 else {                                  //altfel, fratele e NEGRU
                     if (getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK) {
@@ -217,9 +220,9 @@ void dictionary<K, V, F>::fixDeleteRBTree(Node<K, V>*& node)
                             rotateRight(sibling);
                             sibling = parent->right;    //fratele e fiul drept (nodul curent e in stanga)
                         }
-                        setColor(sibling, parent->color); //fratele are aceeasi culoare ca si parintele
+                        setColor(sibling, parent->color);   //fratele are aceeasi culoare ca si parintele
                         setColor(parent, BLACK);        //parintele e NEGRU
-                        setColor(sibling->right, BLACK);//fiul drept al fratelui e NEGRU
+                        setColor(sibling->right, BLACK);    //fiul drept al fratelui e NEGRU
                         rotateLeft(parent);
                         break;
                     }
@@ -244,14 +247,14 @@ void dictionary<K, V, F>::fixDeleteRBTree(Node<K, V>*& node)
                     }
                     else {                              //daca fratele nu are 2 fii NEGRI
                         if (getColor(sibling->left) == BLACK) { //daca fiul stang e NEGRU
-                            setColor(sibling->right, BLACK); //atunci cel drept devine NEGRU
+                            setColor(sibling->right, BLACK);    //atunci cel drept devine NEGRU
                             setColor(sibling, RED);     //parintele lor (fratele) devine ROSU
                             rotateLeft(sibling);
                             sibling = parent->left;     //fratele e fiul stang
                         }
-                        setColor(sibling, parent->color); //fratele ia culoarea parintelui
-                        setColor(parent, BLACK);          //parintele devine NEGRU
-                        setColor(sibling->left, BLACK);   //fiul stang devine NEGRU
+                        setColor(sibling, parent->color);       //fratele ia culoarea parintelui
+                        setColor(parent, BLACK);        //parintele devine NEGRU
+                        setColor(sibling->left, BLACK); //fiul stang devine NEGRU
                         rotateRight(parent);
                         break;
                     }
@@ -264,18 +267,25 @@ void dictionary<K, V, F>::fixDeleteRBTree(Node<K, V>*& node)
         else
             node->parent->right = NULL;
         delete (node);
-        setColor(root, BLACK); //radacina e mereu NEAGRA
+        setColor(root, BLACK);                          //radacina e mereu NEAGRA
     }
 }
 
 template <class K, class V, class F>
 void dictionary<K, V, F>::printLevelOrder()
 {
-    cout << "Level order: " << endl;
-    if (root == NULL)
-        cout << "Tree is empty" << endl;
-    else
+    cout << "Level order: ";
+    if (root != NULL)
         levelOrder(root);
+    else {
+        try {
+            throw root;
+        }
+        catch (...) {
+            cout << "Tree is empty" << endl;
+        }
+    }
+
     cout << endl;
 }
 
@@ -319,19 +329,19 @@ Node<K, V>* dictionary<K, V, F>::minValueNode(Node<K, V>* node)
 template <class K, class V, class F>
 Node<K, V>* dictionary<K, V, F>::insertBST(Node<K, V>*& root, Node<K, V>*& ptr)
 {
-    if (root == NULL)                                       //daca arborele e gol
+    if (root == NULL)                                   //daca arborele e gol
         return ptr;
 
-    if (cmp(ptr->key, root->key)) {                         //daca ptr->key < root->key
-        root->left = insertBST(root->left, ptr);            //inseram pe partea stanga (prop bst)
-        root->left->parent = root;                          //actualizarea radacinii pe masura ce avansam
+    if (cmp(ptr->key, root->key)) {                     //daca ptr->key < root->key
+        root->left = insertBST(root->left, ptr);        //inseram pe partea stanga (prop bst)
+        root->left->parent = root;                      //actualizarea radacinii pe masura ce avansam
     }
-    else if (cmp(root->key, ptr->key)) {                    //daca root->key < ptr->key
-        root->right = insertBST(root->right, ptr);          //inseram pe partea dreapta (prop bst)
-        root->right->parent = root;                         //actualizarea radacinii pe masura ce avansam
+    else if (cmp(root->key, ptr->key)) {                //daca root->key < ptr->key
+        root->right = insertBST(root->right, ptr);      //inseram pe partea dreapta (prop bst)
+        root->right->parent = root;                     //actualizarea radacinii pe masura ce avansam
     }
     else
-        root->value = ptr->value;                           //daca exista deja cheia de inserat, doar actualizam valoarea
+        root->value = ptr->value;                       //daca exista deja cheia de inserat, doar actualizam valoarea
 
     return root;
 }
@@ -339,63 +349,107 @@ Node<K, V>* dictionary<K, V, F>::insertBST(Node<K, V>*& root, Node<K, V>*& ptr)
 template <class K, class V, class F>
 Node<K, V>* dictionary<K, V, F>::deleteBST(Node<K, V>*& root, K newKey)
 {
-    if (root == NULL)                                       //daca arborele e gol
+    if (root == NULL)                                   //daca arborele e gol
         return root;
 
-    if (cmp(newKey, root->key))                             //daca newKey < root->key
-        return deleteBST(root->left, newKey);               //avansam pe partea stanga (prop bst)
+    if (cmp(newKey, root->key))                         //daca newKey < root->key
+        return deleteBST(root->left, newKey);           //avansam pe partea stanga (prop bst)
 
-    if (cmp(root->key, newKey))                             //daca root->key < newKey
-        return deleteBST(root->right, newKey);              //avansam pe partea dreapta (prop bst)
+    if (cmp(root->key, newKey))                         //daca root->key < newKey
+        return deleteBST(root->right, newKey);          //avansam pe partea dreapta (prop bst)
 
-    if (root->left == NULL || root->right == NULL)          //un nod cu 1 sau 0 fii
+    if (root->left == NULL || root->right == NULL)      //un nod cu 1 sau 0 fii
         return root;
 
-    //altfel, nu iese prin return deci are 2 fii
-    Node<K, V>* temp = minValueNode(root->right);           //se preia minimul din arbore (aflat pe dreapta)
+    //altfel, are 2 fii
+    Node<K, V>* temp = minValueNode(root->right);       //se preia minimul din arbore (aflat pe dreapta)
     root->key = temp->key;
     return deleteBST(root->right, temp->key);
+}
+
+template <class K, class V, class F>
+void dictionary<K, V, F>::helpCopy(Node<K, V>*& n, Node<K, V>* nSrc)
+{
+    if (nSrc == NULL) {
+        n = NULL;
+        return;
+    }
+    else {
+        n = new Node<K, V>(nSrc->key, nSrc->value);
+        n->color = nSrc->color;
+        n->parent = nSrc->parent;
+        n->left = nSrc->left;
+        n->right = nSrc->right;
+        helpCopy(n->left, nSrc->left);
+        helpCopy(n->right, nSrc->right);
+    }
+
+    return;
+}
+
+template <class K, class V, class F>
+void dictionary<K, V, F>::helpDestruct(Node<K, V> *&n)
+{
+    if (n == NULL)
+        return;
+
+    else {
+        helpDestruct(n->left);
+        helpDestruct(n->right);
+        delete n;
+    }
+
+    return;
 }
 
 // METODELE DE LA PUBLIC
 
 template <class K, class V, class F>
-dictionary<K, V, F>::dictionary()                           //constructor fara parametri
+dictionary<K, V, F>::dictionary()                       //constructor fara parametri
     : root(NULL)
 {
 }
 
 template <class K, class V, class F>
-dictionary<K, V, F>::dictionary(const dictionary& d)        //constructor de copiere
+dictionary<K, V, F>::dictionary(const dictionary& d)    //constructor de copiere
 {
-    root = d.root;
+    helpCopy(root, d.root);
 }
 
 template <class K, class V, class F>
 void dictionary<K, V, F>::insertValue(K key, V val)
 {
-    Node<K, V>* node = new Node<K, V>(key, val);            //se creeaza nodul de inserat
-    root = insertBST(root, node);                           //se apeleaza functia simpla de inserare intr-un arbore de cautare
-                                                            //deoarece, la baza, un rbt este un bst
-    fixInsertRBTree(node);                                  //se apeleaza functia care regleaza proprietatile de rbt
+    Node<K, V>* node = new Node<K, V>(key, val);        //se creeaza nodul de inserat
+    root = insertBST(root, node);                       //se apeleaza functia simpla de inserare intr-un arbore de cautare
+                                                        //deoarece, la baza, un rbt este un bst
+    fixInsertRBTree(node);                              //se apeleaza functia care regleaza proprietatile de rbt
 }
 
 template <class K, class V, class F>
 void dictionary<K, V, F>::deleteValue(K newKey)
 {
-    Node<K, V>* node = deleteBST(root, newKey);             //se apeleaza functia simpla de stergere din bst
-    fixDeleteRBTree(node);                                  //se apeleaza functia care regleaza proprietatile de rbt
+    Node<K, V>* node = deleteBST(root, newKey);         //se apeleaza functia simpla de stergere din bst
+    fixDeleteRBTree(node);                              //se apeleaza functia care regleaza proprietatile de rbt
 }
 
 template <class K, class V, class F>
 void dictionary<K, V, F>::deleteAll()
 {
-    while (root != NULL)                                    //apelare functie de stergere pt a elimina nodurile unul cate unul
+    if (root == NULL) {
+        try {
+            throw NULL;
+        }
+        catch (...) {
+            cout << "Dictionary is already empty" << endl;
+            return;
+        }
+    }
+    while (root != NULL)                                //apelare functie de stergere pt a elimina nodurile unul cate unul
         deleteValue(root->key);
 }
 
 template <class K, class V, class F>
-Node<K, V>* dictionary<K, V, F>::getRoot()                  //getter pt radacina arborelui
+Node<K, V>* dictionary<K, V, F>::getRoot()              //getter pt radacina arborelui
 {
     return root;
 }
@@ -404,29 +458,38 @@ template <class K, class V, class F>
 Node<K, V>* dictionary<K, V, F>::treeSearch(const K newKey, V& newVal) const
 {
     Node<K, V>* temp = root;
-    if (temp == NULL)                                       //daca arborele este gol sau s-a parcurs integral
-        return NULL;                                        //nodul nu exista/nu a fost gasit
-    while (temp) {
-        if (!cmp(temp->key, newKey) && !cmp(newKey, temp->key))
-        //utilizarea obiectului cmp pt a apela functia de comparare
-        //NOT(temp->key>newKey) si NOT(newKey>temp->key) <=> temp->key=newkey
-        {                                                   //deci nodul a fost gasit
-            newVal = temp->value;                           //retinem valoarea in parametru (folosita pt assert)
-            return temp;                                    //returnam nodul cu informatia corect gasita
+    if (temp == NULL)                                   //daca arborele este gol sau s-a parcurs integral
+    {
+        try {
+            throw NULL;
         }
-        else if (cmp(newKey, temp->key)) //daca newKey>temp->key, cautam in subarborele stang (prop bst)
-            temp = temp->left;
-        else if (cmp(temp->key, newKey)) //daca temp->key>newKey, cautam in subarborele drept (prop bst)
-            temp = temp->right;
+        catch (...) {
+            cout << "Input key isn't in the dictionary" << endl;
+            return NULL;
+        }
     }
-    return NULL;
+    else {
+        while (temp) {
+            if (!cmp(temp->key, newKey) && !cmp(newKey, temp->key))
+            //utilizarea obiectului cmp pt a apela functia de comparare
+            //NOT(temp->key>newKey) si NOT(newKey>temp->key) <=> temp->key=newkey
+            {                                           //deci nodul a fost gasit
+                newVal = temp->value;                   //retinem valoarea in parametru (folosita pt assert)
+                return temp;                            //returnam nodul cu informatia corect gasita
+            }
+            else if (cmp(newKey, temp->key))            //newKey>temp->key, cautam in subarborele stang (prop bst)
+                temp = temp->left;
+            else if (cmp(temp->key, newKey))            //temp->key>newKey, cautam in subarborele drept (prop bst)
+                temp = temp->right;
+        }
+    }
 }
 
 template <class K, class V, class F>
 dictionary<K, V, F>& dictionary<K, V, F>::operator=(dictionary<K, V, F>& d)
 {
-    if (this != &d)                                         //daca obiectul curent e diferit de cel atribuit
-        root = d.root;
+    if (this != &d)
+        helpCopy(root, d.root);
     return *this;
 }
 
@@ -434,23 +497,22 @@ template <class K, class V, class F>
 V dictionary<K, V, F>::operator[](const K& i) const
 {
     int val = 0;
-    if (treeSearch(i, val) == NULL)                         //daca nu exista nodul cu cheia i
-        return NULL;
-    return val;                                             //altfel se returneaza valoarea
+    if (treeSearch(i, val) != NULL)
+        return val;
+    return NULL;
 }
 
 template <class K, class V, class F>
 ostream& operator<<(ostream& out, dictionary<K, V, F>& d)
 {
-    d.printLevelOrder();                                    //afisarea se realizeaza pe nivele
+    d.printLevelOrder();                                //afisarea se realizeaza pe nivele
     return out;
 }
 
 template <class K, class V, class F>
 dictionary<K, V, F>::~dictionary()
 {
-    delete (root);                                          //distrugerea radacinii implica distrugerea intregului arbore
-    cout << "destroyed" << endl;
+    helpDestruct(root);
 }
 
 #endif // _DICTIONARY_H_

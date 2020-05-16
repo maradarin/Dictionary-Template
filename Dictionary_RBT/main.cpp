@@ -8,32 +8,35 @@ void testare()
     dictionary<int, int, KeyComp<int> > D;
 
     D.insertValue(1, 143);
-    cout << D; //operatorul << supraincarcat
 
     int valoare;
     D.treeSearch(1, valoare);
-    assert(valoare == 143); //cautare dupa cheie
+    assert(valoare == 143);         //cautare dupa cheie
 
     D.insertValue(44, 213);
     D.insertValue(87, 412);
     D.insertValue(6, 5);
+    D.insertValue(1,100);           //inlocuirea unei valori
 
-    cout << D; //operatorul << supraincarcat
+    assert(D[1] != 213);            //verificarea valorii inlocuite
+    assert(D[1] == 100);
 
-    assert(D[44] == 213);
     D.deleteAll();
+    assert(D.getRoot() == NULL);
     D.insertValue(5, 7);
-    cout << D;
-    D.deleteValue(5); //stergere dupa cheie
-    assert(D[5] == NULL);
+    D.deleteValue(5);               //stergere dupa cheie
+    assert(D[5] == NULL);           //verificare stergere
 
-    D.deleteAll(); //stergerea completa a dictionarului
-
+    D.deleteAll();                  //stergerea completa a dictionarului
+    assert(D.getRoot()==NULL);      //verificare ca arborele e gol
     D.insertValue(23, 24);
     dictionary<int, int> D2;
-    D2 = D;
+    D2 = D;                         //atribuire
+    D.deleteValue(23);
+    assert(D[23] == NULL);
+    assert(D2[23] == 24);           //D e gol, D2 ramane nemodificat
 
-    dictionary<string, int, KeyComp<string> > d4;
+    dictionary<string, int, KeyComp<string> > d4; //cu comparatorul specializat pe string
     d4.insertValue("alfa", 1);
     d4.insertValue("beta", 2);
     d4.insertValue("gama", 3);
@@ -42,46 +45,37 @@ void testare()
     d4.insertValue("theta", 6);
     d4.insertValue("tau", 7);
     d4.insertValue("niu", 8);
+
+    cout << d4 << endl; //operatorul << supraincarcat
+
+    //verificari de ordine, ref la inserare
     assert(d4.getRoot()->getKey() == "gama");
     assert(d4.getRoot()->getLeft()->getKey() == "tau");
     assert(d4.getRoot()->getRight()->getKey() == "beta");
     assert(d4.getRoot()->getLeft()->getLeft()->getKey() == "theta");
     assert(d4.getRoot()->getRight()->getLeft()->getKey() == "delta");
 
-    cout << endl
-         << d4;
     D.insertValue(8, 1);
     D.insertValue(18, 2);
     D.insertValue(5, 3);
     D.insertValue(15, 4);
 
-    cout << D2;
     D.insertValue(17, 5);
     D.insertValue(25, 6);
     D.insertValue(40, 7);
     D.insertValue(80, 8);
 
-    cout << endl
-         << D;
-
-    dictionary<int, int> D1(D);
-
-    cout << endl
-         << D1;
-
-    assert(D2[23] == D1[23]);
-    assert(D2[23] == D[23]);
-    assert(D1[23] == D[23]);
-
-    assert(D.getRoot()->getKey() == 18);
-    assert(D.getRoot()->getLeft()->getKey() == 8);
-    assert(D.getRoot()->getRight()->getKey() == 25);
-    assert(D.getRoot()->getLeft()->getLeft()->getKey() == 5);
-    assert(D.getRoot()->getRight()->getLeft()->getKey() == 23);
+    dictionary<int, int> D1(D);                 //constr de copiere
+    assert(D1[23] == D[23]);                    //23 nu exista nici in D, nici in D1
+    assert(D2[17] == NULL);                     //17 nu exista in D2, ci in D si D1
+    D.deleteValue(17);
+    assert(D[17] == NULL);
+    assert(D1[17] == 5);                        //17 a fost sters doar din D, nu si din D1
 }
 
 int main()
 {
     testare();
+    cout<< endl << "Merge";
     return 0;
 }
