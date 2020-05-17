@@ -4,7 +4,7 @@
 #include "node.h"
 #include "keycomp.h"
 #include <queue>
-#include <exception>
+#include <stdexcept>
 using namespace std;
 
 template <class K, class V, class F = KeyComp<K> >
@@ -437,9 +437,9 @@ void dictionary<K, V, F>::deleteAll()
 {
     if (root == NULL) {
         try {
-            throw NULL;
+            throw 0;
         }
-        catch (...) {
+        catch (int) {
             cout << "Dictionary is already empty" << endl;
             return;
         }
@@ -461,9 +461,9 @@ Node<K, V>* dictionary<K, V, F>::treeSearch(const K newKey, V& newVal) const
     if (temp == NULL)                                   //daca arborele este gol sau s-a parcurs integral
     {
         try {
-            throw NULL;
+            throw 0;
         }
-        catch (...) {
+        catch (int) {
             cout << "Input key isn't in the dictionary" << endl;
             return NULL;
         }
@@ -499,7 +499,7 @@ V dictionary<K, V, F>::operator[](const K& i) const
     int val = 0;
     if (treeSearch(i, val) != NULL)
         return val;
-    return NULL;
+    throw invalid_argument("Key can't be found in the dictionary");
 }
 
 template <class K, class V, class F>

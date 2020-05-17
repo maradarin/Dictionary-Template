@@ -25,7 +25,6 @@ void testare()
     assert(D.getRoot() == NULL);
     D.insertValue(5, 7);
     D.deleteValue(5);               //stergere dupa cheie
-    assert(D[5] == NULL);           //verificare stergere
 
     D.deleteAll();                  //stergerea completa a dictionarului
     assert(D.getRoot()==NULL);      //verificare ca arborele e gol
@@ -33,7 +32,6 @@ void testare()
     dictionary<int, int> D2;
     D2 = D;                         //atribuire
     D.deleteValue(23);
-    assert(D[23] == NULL);
     assert(D2[23] == 24);           //D e gol, D2 ramane nemodificat
 
     dictionary<string, int, KeyComp<string> > d4; //cu comparatorul specializat pe string
@@ -67,9 +65,7 @@ void testare()
 
     dictionary<int, int> D1(D);                 //constr de copiere
     assert(D1[23] == D[23]);                    //23 nu exista nici in D, nici in D1
-    assert(D2[17] == NULL);                     //17 nu exista in D2, ci in D si D1
     D.deleteValue(17);
-    assert(D[17] == NULL);
     assert(D1[17] == 5);                        //17 a fost sters doar din D, nu si din D1
 }
 
